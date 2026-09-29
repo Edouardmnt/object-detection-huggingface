@@ -1,9 +1,6 @@
 import requests
 import os
 
-# URL de l'API et clé d'autorisation
-API_URL = "https://api-inference.huggingface.co/models/facebook/detr-resnet-50"
-headers = {"Authorization": "Bearer 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"}
 
 def query(filename):
     """Envoie une image à l'API Hugging Face pour la détection d'objets."""
