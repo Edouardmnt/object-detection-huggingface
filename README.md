@@ -2,6 +2,8 @@
 
 Script Python qui détecte les objets présents dans une image (chats, chiens, oiseaux…) en appelant l'API d'inférence Hugging Face. Par défaut, il utilise le modèle [DETR ResNet-50](https://huggingface.co/facebook/detr-resnet-50) de Meta.
 
+**▶ [Essayer la démo en ligne](https://huggingface.co/spaces/edouardmnt04/object-detection-detr)** : une interface Gradio hébergée sur Hugging Face, où l'on dépose une image pour voir les objets encadrés.
+
 ## Fonctionnement
 
 1. Le script lit l'image et l'envoie à l'API d'inférence.
