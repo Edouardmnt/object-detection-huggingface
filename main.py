@@ -1,39 +1,54 @@
-import requests
+"""Détection d'objets dans une image via l'API d'inférence Hugging Face."""
+
+import argparse
 import os
+import sys
+
+import requests
+
+DEFAULT_API_URL = "https://router.huggingface.co/hf-inference/models/facebook/detr-resnet-50"
+API_URL = os.getenv("HF_API_URL", DEFAULT_API_URL)
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 
-def query(filename):
-    """Envoie une image à l'API Hugging Face pour la détection d'objets."""
-    # Vérifie si le fichier existe
+def query(filename: str):
+    """Envoie une image à l'API et renvoie la liste des objets détectés."""
     if not os.path.exists(filename):
-        print(f"Erreur : Le fichier {filename} n'existe pas.")
+        print(f"Erreur : le fichier {filename} n'existe pas.")
         return None
 
-    # Lecture et envoi de l'image à l'API
     with open(filename, "rb") as f:
         data = f.read()
 
-    response = requests.post(API_URL, headers=headers, data=data)
+    headers = {"Authorization": f"Bearer {HF_TOKEN}", "Content-Type": "image/jpeg"}
+    response = requests.post(API_URL, headers=headers, data=data, timeout=60)
 
-    # Vérifie si la requête a été réussie
     if response.status_code == 200:
         return response.json()
-    else:
-        print(f"Erreur API : {response.status_code} - {response.text}")
-        return None
+    print(f"Erreur API : {response.status_code} - {response.text}")
+    return None
 
-# Nom du fichier image à analyser
-filename = "C:/Users/edoua/PycharmProjects/projet_IA/cats.jpg"
 
-# Appel de l'API et récupération des résultats
-output = query(filename)
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Détecte les objets présents dans une image.")
+    parser.add_argument("image", nargs="?", default="cats.jpg", help="chemin de l'image (défaut : cats.jpg)")
+    parser.add_argument("--min-score", type=float, default=0.5, help="score minimal affiché (défaut : 0.5)")
+    args = parser.parse_args()
 
-# Traitement et affichage des résultats
-if output:
-    print("Résultats de la détection :")
+    if not HF_TOKEN:
+        sys.exit("Définissez la variable d'environnement HF_TOKEN (token Hugging Face).")
+
+    output = query(args.image)
+    if not output:
+        print("Aucun résultat à afficher.")
+        return
+
+    print(f"Résultats de la détection pour {args.image} :")
     for detection in output:
-        label = detection.get("label", "Inconnu")  # Récupère le label (ou 'Inconnu' si absent)
-        score = detection.get("score", 0)         # Récupère le score (ou 0 si absent)
-        print(f"- Objet détecté : {label}, Score : {score:.2f}")
-else:
-    print("Aucun résultat à afficher.")
+        score = detection.get("score", 0)
+        if score >= args.min_score:
+            print(f"- {detection.get('label', 'inconnu')} : {score:.2f}")
+
+
+if __name__ == "__main__":
+    main()
