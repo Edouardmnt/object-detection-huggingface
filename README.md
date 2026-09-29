@@ -4,6 +4,10 @@ Script Python qui détecte les objets présents dans une image (chats, chiens, o
 
 **▶ [Essayer la démo en ligne](https://huggingface.co/spaces/edouardmnt04/object-detection-detr)** : une interface Gradio hébergée sur Hugging Face, où l'on dépose une image pour voir les objets encadrés.
 
+## Pourquoi ce projet
+
+Un projet d'apprentissage : sur un cas simple, comprendre le rôle de GitHub (versionner et documenter le code, gérer les secrets proprement) et celui de Hugging Face (modèles pré-entraînés, API d'inférence, hébergement d'une démo). Les deux se complètent : le code vit ici, la démo tourne sur Hugging Face.
+
 ## Fonctionnement
 
 1. Le script lit l'image et l'envoie à l'API d'inférence.
