@@ -5,6 +5,10 @@ import os
 import sys
 
 import requests
+from dotenv import load_dotenv
+
+# Charge les variables définies dans le fichier .env (ignoré par Git)
+load_dotenv()
 
 DEFAULT_API_URL = "https://router.huggingface.co/hf-inference/models/facebook/detr-resnet-50"
 API_URL = os.getenv("HF_API_URL", DEFAULT_API_URL)
@@ -36,7 +40,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if not HF_TOKEN:
-        sys.exit("Définissez la variable d'environnement HF_TOKEN (token Hugging Face).")
+        sys.exit("HF_TOKEN introuvable : copiez .env.example en .env et renseignez votre token Hugging Face.")
 
     output = query(args.image)
     if not output:
